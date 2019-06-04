@@ -70,4 +70,20 @@ public class ArchivoController {
 		
 		return archivo;	
 	}
+	
+	/**
+	 * Buscar en Wikipedia: obtener el Titulo y Fecha de modificacion para cada Item
+	 * @param archivo Objeto que contiene los items
+	 * @return archivo Objeto ahora con los titulos y fechas de modificacion de cada Item
+	 */
+	public Archivo obtenerTituloFechaWikipedia ( Archivo archivo ) {
+		
+		try {
+			archivo.setItems(archivoService.getTituloFechaWikipedia(archivo));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return archivo;
+	}
 }

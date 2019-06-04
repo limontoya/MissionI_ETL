@@ -16,6 +16,10 @@ public class Archivo {
 	private String headerCSV;
 	private String urlWikipedia;
 	private HashSet<Item> items;
+	private String urlUserAgent;
+	private String urlWikiTitle;
+	private String urlWikiDate;
+	private String urlWikipediaRedirect;
 	
 	/**
 	 * Constructor
@@ -92,6 +96,62 @@ public class Archivo {
 	 */
 	public void setItems(HashSet<Item> items) {
 		this.items = items;
+	}
+
+	/**
+	 * @return the urlUserAgent
+	 */
+	public String getUrlUserAgent() {
+		return urlUserAgent;
+	}
+
+	/**
+	 * @param urlUserAgent the urlUserAgent to set
+	 */
+	public void setUrlUserAgent(String urlUserAgent) {
+		this.urlUserAgent = urlUserAgent;
+	}
+
+	/**
+	 * @return the urlWikiTitle
+	 */
+	public String getUrlWikiTitle() {
+		return urlWikiTitle;
+	}
+
+	/**
+	 * @param urlWikiTitle the urlWikiTitle to set
+	 */
+	public void setUrlWikiTitle(String urlWikiTitle) {
+		this.urlWikiTitle = urlWikiTitle;
+	}
+
+	/**
+	 * @return the urlWikiDate
+	 */
+	public String getUrlWikiDate() {
+		return urlWikiDate;
+	}
+
+	/**
+	 * @param urlWikiDate the urlWikiDate to set
+	 */
+	public void setUrlWikiDate(String urlWikiDate) {
+		this.urlWikiDate = urlWikiDate;
+	}
+
+	/**
+	 * @return the urlWikipediaRedirect
+	 */
+	public String getUrlWikipediaRedirect() {
+		return urlWikipediaRedirect;
+	}
+
+	/**
+	 * @param urlWikipediaRedirect the urlWikipediaRedirect to set
+	 */
+	public void setUrlWikipediaRedirect(String urlWikipediaRedirect) {
+		this.urlWikipediaRedirect = urlWikipediaRedirect;
 	}
 	
 }

@@ -41,7 +41,13 @@ public class App
     	
     	LOGGER.log(Level.INFO, "Archivo nombres leido correctamente. Cantidad de Items [" + archivo.getItems().size() + "]");
     	
+    	/**
+    	 * 2. Por cada pagina de Wikipedia extraer y analizar 
+    	 *     el titulo y ultima fecha de modificacion
+    	 */
+    	archivo = archivoController.obtenerTituloFechaWikipedia(archivo);
     	
+    	LOGGER.log(Level.INFO, "Consulta a Wikipedia realizada correctamente.");
 		
     }
 }
