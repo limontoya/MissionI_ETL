@@ -3,6 +3,7 @@
  */
 package com.mission.app.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -85,5 +86,25 @@ public class ArchivoController {
 		}
 		
 		return archivo;
+	}
+	
+	
+	/**
+	 * Escribir en el archivo CSV UrlWikipedia, nombreFichero, tituloPagina, fechaUltimaModificacion
+	 * @param archivo Objeto que contiene los items
+	 * @return archivo 
+	 */
+	public void escribirItemsArchivoCSV ( Archivo archivo ) {
+		
+		try {
+			archivoService.setItemsArchivoCSV(archivo.getFileOutput(), archivo.getItems());
+		} catch (FileNotFoundException fnf) {
+			System.out.println("Operacion I/O interrumpida: No se encuentra el archivo CSV. \n" + fnf.getMessage());
+		} catch (IOException ioe) {
+			System.out.println("Operacion I/O interrumpida: Escribiendo el archivo CSV. \n" + ioe.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

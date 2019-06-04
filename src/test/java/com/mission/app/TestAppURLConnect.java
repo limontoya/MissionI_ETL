@@ -28,13 +28,12 @@ public class TestAppURLConnect {
 		
 		String itemURL = "https://en.wikipedia.org/wiki/Hello";
 		String userAgent = "Mozilla/5.0";
-		String itemURLRedirect = "";
 		
 		as = new ArchivoService();
 		
 		Document doc = null;
 		try {
-			doc = as.getDocumentJsoupConnect (itemURL, userAgent, itemURLRedirect, "");
+			doc = as.getDocumentJsoupConnect (itemURL, userAgent);
 						
 		} catch (Exception e) {
 			fail("Error Test de Conexion con Jsoup");
@@ -52,14 +51,13 @@ public class TestAppURLConnect {
 		String itemURL = "https://en.wikipedia.org/wiki/";
 		String urlWikiTitle = "firstHeading";
 		String userAgent = "Mozilla/5.0";
-		String itemURLRedirect = "";
 		String itemName = "!";
 		String title = "";
 		as = new ArchivoService();
 		
 		Document doc;
 		try {
-			doc = as.getDocumentJsoupConnect (itemURL+itemName, userAgent, itemURLRedirect, itemName);
+			doc = as.getDocumentJsoupConnect (itemURL+itemName, userAgent);
 			
 			//HTML form id que contiene el Titulo
 	    	title = doc.getElementById(urlWikiTitle).text();
@@ -80,14 +78,13 @@ public class TestAppURLConnect {
 		String itemURL = "https://en.wikipedia.org/wiki/";
 		String urlWikiDate = "footer-info-lastmod";
 		String userAgent = "Mozilla/5.0";
-		String itemURLRedirect = "";
 		String itemName = "!Three_Amigos!";
 		String date = "";
 		as = new ArchivoService();
 		
 		Document doc;
 		try {
-			doc = as.getDocumentJsoupConnect (itemURL+itemName, userAgent, itemURLRedirect, itemName);
+			doc = as.getDocumentJsoupConnect (itemURL+itemName, userAgent);
 			
 			//HTML form id que contiene el Titulo
 			date = doc.getElementById(urlWikiDate).text();
@@ -108,7 +105,6 @@ public class TestAppURLConnect {
 		String itemURL = "https://en.wikipedia.org/wiki/";
 		String urlWikiDate = "footer-info-lastmod";
 		String userAgent = "Mozilla/5.0";
-		String itemURLRedirect = "";
 		String itemName = "!Three_Amigos!";
 		String date = "";
 		String dateStr = "";
@@ -117,7 +113,7 @@ public class TestAppURLConnect {
 		
 		Document doc;
 		try {
-			doc = as.getDocumentJsoupConnect (itemURL+itemName, userAgent, itemURLRedirect, itemName);
+			doc = as.getDocumentJsoupConnect (itemURL+itemName, userAgent);
 			
 			//HTML form id que contiene el Titulo
 			dateStr = doc.getElementById(urlWikiDate).text();
@@ -129,6 +125,38 @@ public class TestAppURLConnect {
 		}
 		    	
     	assertEquals("15 May 2019", date);
+	}
+	
+	/**
+	 * Test obteniendo el Elemento por ID footer-info-lastmod y cambiando el formato de la fecha
+	 * Con la opcion para redireccionar
+	 */
+	@Test
+	public void testJsoupFechaConRedirect () {
+		
+		String urlWikiDate = "footer-info-lastmod";
+		String userAgent = "Mozilla/5.0";
+		String itemURLRedirect = "https://en.wikipedia.org/w/index.php?redirect=no&title=";
+		String itemName = "'Nam";
+		String date = "";
+		String dateStr = "";
+		as = new ArchivoService();
+		au = new ArchivoUtil();
+		
+		Document doc;
+		try {
+			doc = as.getDocumentJsoupConnectRedirect(userAgent, itemURLRedirect, itemName);
+			
+			//HTML form id que contiene el Titulo
+			dateStr = doc.getElementById(urlWikiDate).text();
+			
+			date = au.utilSplitString(dateStr, "on|at|,");
+			
+		} catch (Exception e) {
+			fail("Error Test de Conexion con Jsoup obteniendo el elemento DOM ["+urlWikiDate+"] cambiando el formato de fecha.");
+		}
+		    	
+    	assertEquals("6 November 2009", date);
 	}
 	
 

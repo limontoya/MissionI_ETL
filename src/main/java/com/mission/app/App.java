@@ -32,14 +32,14 @@ public class App
     	 */
     	archivo = archivoController.leerPropiedades();
     	
-		LOGGER.log(Level.INFO, "Propiedades leidas correctamente.");
+		LOGGER.log(Level.INFO, "Propiedades leidas.");
 		
 		/**
     	 * 1. Lee el archivo de entrada y construye las URLs
     	 */
     	archivo = archivoController.leerArchivoEntrada(archivo);
     	
-    	LOGGER.log(Level.INFO, "Archivo nombres leido correctamente. Cantidad de Items [" + archivo.getItems().size() + "]");
+    	LOGGER.log(Level.INFO, "Archivo nombres leido. Cantidad de Items [" + archivo.getItems().size() + "]");
     	
     	/**
     	 * 2. Por cada pagina de Wikipedia extraer y analizar 
@@ -47,7 +47,18 @@ public class App
     	 */
     	archivo = archivoController.obtenerTituloFechaWikipedia(archivo);
     	
-    	LOGGER.log(Level.INFO, "Consulta a Wikipedia realizada correctamente.");
+    	LOGGER.log(Level.INFO, "Consulta a Wikipedia realizada.");
+    	
+    	/**
+    	 * 4. Crear archivo CSV con los datos de Wikipedia
+    	 */
+    	archivoController.escribirItemsArchivoCSV(archivo);
+    	
+    	LOGGER.log(Level.INFO, "Creacion CSV realizado.");
+    	
+    	/**
+    	 * 5. Pregunta: Cuántas páginas de Wikipedia fueron modificadas durante este año?
+    	 */
 		
     }
 }

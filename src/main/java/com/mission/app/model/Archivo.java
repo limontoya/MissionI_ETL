@@ -3,7 +3,7 @@
  */
 package com.mission.app.model;
 
-import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author limon
@@ -15,7 +15,7 @@ public class Archivo {
 	private String fileOutput;
 	private String headerCSV;
 	private String urlWikipedia;
-	private HashSet<Item> items;
+	private List<Item> items;
 	private String urlUserAgent;
 	private String urlWikiTitle;
 	private String urlWikiDate;
@@ -87,14 +87,14 @@ public class Archivo {
 	/**
 	 * @return the items
 	 */
-	public HashSet<Item> getItems() {
+	public List<Item> getItems() {
 		return items;
 	}
 
 	/**
 	 * @param items the items to set
 	 */
-	public void setItems(HashSet<Item> items) {
+	public void setItems(List<Item> items) {
 		this.items = items;
 	}
 

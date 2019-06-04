@@ -4,11 +4,16 @@
 package com.mission.app.service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
-import java.util.HashSet;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -20,6 +25,7 @@ import org.jsoup.nodes.Document;
 import com.mission.app.model.Archivo;
 import com.mission.app.model.Item;
 import com.mission.app.util.ArchivoUtil;
+import com.opencsv.CSVWriter;
 
 /**
  * @author limon
@@ -67,14 +73,14 @@ public class ArchivoService {
 	 * @return
 	 * @throws IOException
 	 */
-	public HashSet<Item> setNombresArchivo (String fileInput, String urlWiki) throws IOException {
+	public List<Item> setNombresArchivo (String fileInput, String urlWiki) throws IOException {
 		
 		//apache.commons.io File Utils para obtener todos los simbolos
 		LineIterator it = FileUtils.lineIterator(new File(fileInput), "UTF-8");
 		
 		//Manejar los items del archivo a leer
-		HashSet<Item> listOfItems = new HashSet<Item>();
-		int lineNumber = 0;
+		List<Item> listOfItems = new ArrayList<Item>();
+		Long lineNumber = 0L;
 		
 		//Saltar primer linea
 		it.nextLine();
@@ -110,7 +116,7 @@ public class ArchivoService {
 	 * @return Set de Items con el titulo de Wikipedia y la ultima fecha de modificacion de la pagina
 	 * @throws Exception
 	 */
-	public HashSet<Item> getTituloFechaWikipedia (Archivo archivo) throws Exception {
+	public List<Item> getTituloFechaWikipedia (Archivo archivo) throws Exception {
 		
 		String title = ""; 
 		String lastModDate = "";
@@ -118,7 +124,8 @@ public class ArchivoService {
         
 		//Recorrer el listado de items
 		Item item;
-		HashSet<Item> items = archivo.getItems();
+		List<Item> items = new ArrayList<Item>();
+		items = archivo.getItems();
 		Iterator<Item> iter = items.iterator();
 
 		Document doc = null;
@@ -126,14 +133,19 @@ public class ArchivoService {
 		while( iter.hasNext() ){
 
 			item = (Item) iter.next(); //Cast del objeto a Item
-
 			
 			try {
-				//String itemURL, String userAgent, String itemURLRedirect
+				//Conexion normal
 				doc = getDocumentJsoupConnect(
-						item.getUrl(), archivo.getUrlUserAgent(), archivo.getUrlWikipediaRedirect(), item.getName());
-								
-			} 
+						item.getUrl(), archivo.getUrlUserAgent());
+			}
+			catch (NullPointerException npe) {
+				
+				//Conexion no normal- cuando redirecciona una pagina
+				doc = getDocumentJsoupConnectRedirect(
+						archivo.getUrlUserAgent(), archivo.getUrlWikipediaRedirect(), item.getName());
+				
+			}
 			catch (HttpStatusException hse) {
 				//System.out.println("El id ["+cant+"] item ["+item.getName()+"], no encontro la ruta. "+hse.getLocalizedMessage());
 			}
@@ -165,9 +177,6 @@ public class ArchivoService {
 			//Establecer para cada Item el valor de Titulo y Fecha de ultima modificacion
 	    	item.setTitle(title);
 	    	item.setLastModification(date);
-
-	    	//System.out.println(item.getId()+" ->> "+item.getName()+" -- "+item.getTitle());
-	    	//cant++;
 		
 		}
 		return items;
@@ -175,28 +184,81 @@ public class ArchivoService {
 	
 	/**
 	 * Conectar con la URL y obtener el documento para encontrar el titulo y la fecha de modificacion
-	 * @param url URL construida con la linea del archivo de entrada
+	 * @param itemURL URL construida con la linea del archivo de entrada
+	 * @param userAgent Conectar a la URL con los navegadores disponibles
+	 * @return objeto Documento
+	 * @throws NullPointerException
+	 * @throws IOException 
+	 */
+	public Document getDocumentJsoupConnect (String itemURL, String userAgent) throws NullPointerException, IOException  {
+		
+		Document document = null;
+		
+		//Conectar con Wikipedia
+		document = Jsoup.connect(itemURL).userAgent(userAgent)
+						.followRedirects(true).timeout(3000*10000).get();
+				
+		return document;
+	}
+	
+	/**
+	 * Conectar con la URL y obtener el documento para encontrar el titulo y la fecha de modificacion con Redireccion
 	 * @param userAgent Conectar a la URL con los navegadores disponibles
 	 * @param itemURLRedirect URL que redirecciona la busqueda de la pagina
+	 * @param itemName linea del archivo de entrada
 	 * @return objeto Documento
 	 * @throws Exception
 	 */
-	public Document getDocumentJsoupConnect (String itemURL, String userAgent, String itemURLRedirect, String itemName) throws Exception  {
+	public Document getDocumentJsoupConnectRedirect (String userAgent, String itemURLRedirect, String itemName) throws Exception  {
 		
 		Document document = null;	
 		String itemNewURL = "";
 		
 		try {
-			//Conectar con Wikipedia
-			document = Jsoup.connect(itemURL).userAgent(userAgent)
-						.followRedirects(true).timeout(3000*10000).get();
+			//Conectar con Wikipedia redireccionado 
+			itemNewURL = itemURLRedirect + archivoUtil.encodeStringUTF8(itemName);			
+			document = getDocumentJsoupConnect(itemNewURL, userAgent);
 			
 		} catch (NullPointerException npe) {
-			itemNewURL = itemURLRedirect + archivoUtil.encodeStringUTF8(itemName);			
-			document = getDocumentJsoupConnect(itemNewURL, userAgent, itemURLRedirect, itemName);
+			npe.getStackTrace();
 		}
 		
 		return document;
+	}
+	
+	/**
+	 * Utiliza CSVWriter para escribir la lista de items
+	 * @param archivoSalida Nombre de archivo y directorio donde quedara el archivo CSV
+	 * @param listOfItems Items del archivo de entrada
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	public void setItemsArchivoCSV (String archivoSalida, List<Item> listOfItems) throws FileNotFoundException, IOException, Exception {
+
+		String wrline = "";
+
+		FileOutputStream fos = new FileOutputStream(archivoSalida);
+		OutputStreamWriter osw = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
+		CSVWriter writer = new CSVWriter(osw);
+		
+		Item item;
+		Iterator<Item> iter = listOfItems.iterator();
+		
+		while( iter.hasNext() ){
+
+			item = (Item) iter.next(); //Cast del objeto a Item
+		    
+			wrline = item.getUrl()+";"+item.getName()+";"+item.getTitle()+";"+item.getLastModification()+"";
+			//Crear record
+			String [] record = wrline.split(";");
+
+			//Escribir el record en la fila
+			writer.writeNext(record);
+		}
+
+		try { writer.close(); } catch (Exception ext) { }
+
 	}
 	
 }

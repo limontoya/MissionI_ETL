@@ -9,7 +9,7 @@ package com.mission.app.model;
  */
 public class Item {
 
-	private int id;
+	private Long id;
 	private String url;
 	private String name;
 	private String title;
@@ -23,16 +23,32 @@ public class Item {
 	}
 
 	/**
+	 * @param id
+	 * @param url
+	 * @param name
+	 * @param title
+	 * @param lastModification
+	 */
+	public Item(Long id, String url, String name, String title, String lastModification) {
+		super();
+		this.id = id;
+		this.url = url;
+		this.name = name;
+		this.title = title;
+		this.lastModification = lastModification;
+	}
+
+	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -90,6 +106,15 @@ public class Item {
 	 */
 	public void setLastModification(String lastModification) {
 		this.lastModification = lastModification;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", url=" + url + ", name=" + name + ", title=" + title + ", lastModification="
+				+ lastModification + "]";
 	}
 	
 }
