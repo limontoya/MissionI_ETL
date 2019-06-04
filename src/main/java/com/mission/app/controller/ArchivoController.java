@@ -28,7 +28,7 @@ public class ArchivoController {
 	
 	/**
 	 * Metodo que establece las variables fijas del archivo Properties
-	 * @return Objeto Archivo
+	 * @return Objeto Archivo con las propiedades generales
 	 */
 	public Archivo leerPropiedades () {
 		
@@ -48,5 +48,26 @@ public class ArchivoController {
 		}
 		
 		return archivo;		
+	}
+	
+	/**
+	 * Metodo que lee cada linea del archivo para construir las URls
+	 * @param archivo Objeto que contiene las propiedades del archivo de entrada
+	 * @return objeto archivo que incluye la lista de items con las URLs
+	 */
+	public Archivo leerArchivoEntrada (Archivo archivo) {
+		
+		try {
+			LOGGER.log(Level.INFO, "Set de lectura y manejo de los items del archivo de entrada.");
+			archivo.setItems(
+					archivoService.setNombresArchivo(
+							archivo.getFileInput(), archivo.getUrlWikipedia()));
+		
+		} catch (IOException e) {
+			LOGGER.log(Level.SEVERE, "No se puede EstablecerNombresArchivo");
+			e.printStackTrace();
+		}
+		
+		return archivo;	
 	}
 }

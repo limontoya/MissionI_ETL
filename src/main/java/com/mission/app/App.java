@@ -32,6 +32,16 @@ public class App
     	 */
     	archivo = archivoController.leerPropiedades();
     	
-		LOGGER.log(Level.INFO, "Propiedades leidas correctamente."+archivo.getFileInput());
+		LOGGER.log(Level.INFO, "Propiedades leidas correctamente.");
+		
+		/**
+    	 * 1. Lee el archivo de entrada y construye las URLs
+    	 */
+    	archivo = archivoController.leerArchivoEntrada(archivo);
+    	
+    	LOGGER.log(Level.INFO, "Archivo nombres leido correctamente. Cantidad de Items [" + archivo.getItems().size() + "]");
+    	
+    	
+		
     }
 }

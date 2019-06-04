@@ -4,6 +4,10 @@
 /build/www/**
 /src/test/javascript/
 
+# Archivos de entrada y salida
+*.txt
+*.csv
+
 ######################
 # Eclipse
 ######################
