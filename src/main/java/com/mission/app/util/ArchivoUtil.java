@@ -8,6 +8,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -71,6 +76,33 @@ public class ArchivoUtil {
             return URLEncoder.encode(strToEncode, StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex.getCause());
+        }
+    }
+    
+    /**
+     * Compara una fecha con formato dd MMMM yyyy con el año especificado
+     * @param strDateLastModification
+     * @param thisYear
+     * @return
+     */
+	public boolean isLastModifiedThisYear( String strDate, int thisYear ) {
+
+    	try {
+    		//Formato de fecha de USA
+    		DateFormat formatter = new SimpleDateFormat("dd MMMM yyyy", Locale.US);	
+    		
+    		Date date = formatter.parse(strDate);
+		        
+    		Calendar cal = Calendar.getInstance();
+    		cal.setTime(date);
+    		
+    		//Comparo el año usando Calendar
+    		if (cal.get(Calendar.YEAR)==thisYear) {
+	        	return true;
+	        } else return false;
+	        
+    	} catch (Exception ex) {
+            return false;
         }
     }
 

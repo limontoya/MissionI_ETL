@@ -29,6 +29,9 @@ public class TestAppCSVWriter {
 	private static String archivoSalida;
 	private static List<Item> listOfItems;
 	
+	/**
+	 * Creacion de objetos antes para utilizarlos durante los test, solo se crea una vez
+	 */
 	@BeforeClass
 	public static void onlyOnce() {
 		
@@ -50,6 +53,10 @@ public class TestAppCSVWriter {
 				4L,"https://en.wikipedia.org/wiki/'Till_I_Collapse","'Till_I_Collapse","'Till I Collapse","27 April 2019"));
 	}
 	
+	/**
+	 * Crea el archivo csv utilizando el Servicio de Archivo
+	 * Test si ha creado el archivo
+	 */
 	@Test
 	public void testCSVWriterFileExists () {
 		
@@ -68,6 +75,9 @@ public class TestAppCSVWriter {
 		
 	}
 	
+	/**
+	 * Lee la tercer columna del primer Item del archivo creado
+	 */
 	@Test
 	public void testCSVWriterContent () {
 			

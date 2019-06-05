@@ -62,6 +62,7 @@ public class ArchivoService {
 		archivo.setUrlWikiTitle(properties.getProperty("wiki-titulo"));
 		archivo.setUrlWikiDate(properties.getProperty("wiki-fecha"));
 		archivo.setUrlWikipediaRedirect(properties.getProperty("item-url-redirect"));
+		archivo.setYear(Integer.parseInt(properties.getProperty("item-year")));
 
 		return archivo;
 	}
@@ -258,7 +259,35 @@ public class ArchivoService {
 		}
 
 		try { writer.close(); } catch (Exception ext) { }
-
 	}
+	
+	/**
+	 * Compara las fechas de los items con el año especificado
+	 * @param listOfItems lista de cada item leido del archivo de entrada
+	 * @param year Año especificado en .properties
+	 * @return
+	 */
+	public int getContadorPaginasModificadas( List<Item> listOfItems, int year ) {
+    	
+    	Iterator<Item> iter = listOfItems.iterator();
+		Item item = null;
+		int contador = 0;
+		
+		//Iterar sobre cada item
+		while( iter.hasNext() ){
+	        
+			item = (Item) iter.next();
+			
+			//Comprobar que la fecha es vacio o es nula para contar por año
+			if (item.getLastModification()!=null && item.getLastModification()!="") {
+			
+		        if (archivoUtil.isLastModifiedThisYear(item.getLastModification(), year )) {
+		        	contador++;
+		        }
+	        }
+		}
+        
+        return contador;    	
+    }
 	
 }

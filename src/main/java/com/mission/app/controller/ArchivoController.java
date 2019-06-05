@@ -107,4 +107,15 @@ public class ArchivoController {
 		}
 		
 	}
+	
+	/**
+	 * Obtener la cantidad de paginas modificadas en el año
+	 * @param archivo
+	 * @return
+	 */
+	public int obtenerCantidadPaginasModificadasAnio (Archivo archivo) {
+		
+		return archivoService.getContadorPaginasModificadas(archivo.getItems(), archivo.getYear());
+		
+	}
 }

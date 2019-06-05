@@ -7,7 +7,7 @@ import com.mission.app.controller.ArchivoController;
 import com.mission.app.model.Archivo;
 
 /**
- * Hello world!
+ * Clase principal!
  *
  */
 public class App 
@@ -59,6 +59,8 @@ public class App
     	/**
     	 * 5. Pregunta: Cuántas páginas de Wikipedia fueron modificadas durante este año?
     	 */
+    	int cantPaginasModificadas = archivoController.obtenerCantidadPaginasModificadasAnio(archivo);
+    	LOGGER.log(Level.INFO, "Cantidad de paginas modificadas en 2019 ["+cantPaginasModificadas  + "]" );
 		
     }
 }
